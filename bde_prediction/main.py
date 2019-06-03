@@ -11,6 +11,7 @@ app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
 from prediction import predict_bdes, check_input
 from drawing import draw_mol_outlier
+from bde.fragment import canonicalize_smiles
 
 class ReusableForm(Form):
     name = TextField('SMILES:', validators=[validators.required()])
@@ -35,4 +36,9 @@ def result():
         svg = draw_mol_outlier(can_smiles, missing_atom, missing_bond)
         return render_template(
             "outlier.html", form=form, smiles=can_smiles, mol_svg=svg)
+
+    else:
+
+        bde_df = predict_bdes(smiles)
+
 

@@ -1,6 +1,6 @@
 FROM continuumio/miniconda3
 
-COPY ysipred/environment.yml /tmp/environment.yml
+COPY bde_prediction/environment.yml /tmp/environment.yml
 WORKDIR /tmp
 RUN apt-get update && \
     apt-get install -y --no-install-recommends libxrender1 libsm6 && \
@@ -9,7 +9,7 @@ RUN apt-get update && \
     conda clean --all --yes
 
 RUN mkdir -p /deploy/app
-COPY ysipred /deploy/app
+COPY bde_prediction /deploy/app
 
 WORKDIR /deploy/app
 

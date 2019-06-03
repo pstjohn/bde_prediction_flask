@@ -1,10 +1,14 @@
-from bde.fragment import fragment_iterator
+import sys
+sys.path.append("bde")
+
 import pickle
 import warnings
 
+import numpy as np
 import pandas as pd
 from keras.models import load_model
 
+from bde.fragment import fragment_iterator
 from preprocessor_utils import ConcatGraphSequence
 from nfp import custom_layers
 from drawing import draw_bde

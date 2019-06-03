@@ -19,7 +19,7 @@ The dependencies are therefore
 
 ## To launch a local server:
 ```
-cd ysipred
+cd bde_prediction
 gunicorn --bind 0.0.0.0:2222 main:app
 ```
 

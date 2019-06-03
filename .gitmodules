@@ -1,0 +1,3 @@
+[submodule "bde_prediction/bde"]
+	path = bde_prediction/bde
+	url = git@github.com:pstjohn/bde.git

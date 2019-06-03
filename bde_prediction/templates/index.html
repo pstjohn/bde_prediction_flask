@@ -1,9 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 	<head>
-		<title>YSI Estimator</title>
-		<link rel="stylesheet" media="screen" href = "{{ url_for('static',filename='css/bootstrap.min.css') }}">
+		<title>BDE Estimator</title>
+		<link rel="stylesheet" href = "{{ url_for('static',filename='css/bootstrap.min.css') }}">
 		<link rel="stylesheet" href = "{{ url_for('static',filename='css/bootstrap-theme.min.css') }}">
+		<link rel="stylesheet" media="print" href = "{{ url_for('static',filename='css/print.css') }}">
 		<!-- <link rel="stylesheet" href = "{{ url_for('static',filename='css/custom.css') }}"> -->
 		<script>
 			document.write('<link href="{{ url_for('static',filename='css/custom.css') }}?r='+ Math.floor(Math.random()*100) +'" rel="stylesheet" type="text/css" />');
@@ -16,7 +17,7 @@
 		<div class="container">
 
 
-			<h2>Online YSI Estimator</h2>
+			<h2>Online BDE Estimator</h2>
 			<form  action="/result" method="get" role="form">
 				{{ form.csrf }}
 				<div class="form-group">

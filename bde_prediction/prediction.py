@@ -21,6 +21,7 @@ with warnings.catch_warnings():
     model = load_model(
         'model_files/best_model.hdf5', custom_objects=custom_layers)
 
+bde_dft = pd.read_csv('model_files/rdf_data_190531.csv.gz')
 
 def check_input(smiles):
     """ Check the given SMILES to ensure it's present in the model's
@@ -65,6 +66,10 @@ def predict_bdes(smiles):
     pred_df = pred_df.sort_values('bde_pred').drop_duplicates(
         ['fragment1', 'fragment2']).reset_index()
     pred_df['svg'] = pred_df.apply(
-        lambda x: draw_bde(x.molecule, x.bond_index), 1)
+        lambda x: draw_bde(x.molecule, x.bond_index, figsize=(200,200)), 1)
+    pred_df = pred_df.merge(
+        bde_dft[['molecule', 'bond_index', 'bde']],
+        on=['molecule', 'bond_index'], how='left')
+    pred_df['has_dft_bde'] = pred_df.bde.notna()
 
     return pred_df

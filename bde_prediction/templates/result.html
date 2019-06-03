@@ -1,20 +1,26 @@
 {% extends "index.html" %}
 
 {% block content %}
-<h2>{{ smiles }}</h2>
+<h2>{{ smiles }}
+	{% if df['has_dft_bde'].any() %}
+	<span class="label label-success">In DFT Database</span>
+	{% endif %}
+</h2>
 
-<h3>Component Fragments</h3>
+<h3>Bond Dissociation Energies (from weakest to strongest)</h3>
 
 <div class='container'>
 <div id='frags' class="row">
-	{% for key,value in frag_df.iterrows() %}
-	<div class="col-sm-6 col-md-6 media fragment border-1 rounded">
+	{% for key,value in df.iterrows() %}
+	<div class="col-sm-6 col-md-6 media fragment">
 		<div class='media-left'>{{ value['svg'] }}</div>
 		<div class="media-body">
-			<h4 class='media-heading'>{{ key }}</h4>
-			<p><strong>Count:</strong> {{ value['count'] }}<br/>
-			<strong>YSI:</strong> {{ value['mean'] }} &plusmn; {{ value['std'] }}<br/>
-			<strong>Training #:</strong> <a href='frag?name={{ value['frag_link'] }}'>{{ value['train_count'] }}</a><br/>
+			<h4 class='media-heading'>Bond {{ key + 1 }}</h4>
+			<strong>Bond Type:</strong> {{ value['bond_type'] }}<br/>
+			<strong>BDE(ML):</strong> {{ '{0:0.1f}'.format(value['bde_pred']) }} kcal/mol<br/>
+			{% if value['has_dft_bde'] %}
+			<strong>BDE(DFT):</strong> {{ '{0:0.1f}'.format(value['bde']) }} kcal/mol<br/>
+			{% endif %}
 		</div>
 	</div>
 	{% endfor %}

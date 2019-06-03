@@ -189,3 +189,7 @@ th.visible-sm,
 td.visible-sm {
   display: table-cell !important;
 }
+
+.footer {
+  display: none !important;
+  }

@@ -39,7 +39,7 @@ def result():
 
     else:
 
-        bde_df = predict_bdes(smiles)
+        bde_df = predict_bdes(can_smiles)
         return render_template(
             "result.html", form=form, smiles=can_smiles, df=bde_df)
 

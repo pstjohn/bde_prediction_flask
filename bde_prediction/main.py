@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, Markup, flash, url_for
+from flask import Flask, render_template, request, redirect, Markup, flash
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 
 import urllib.parse
@@ -8,6 +8,7 @@ DEBUG = True
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
+app.config['DEBUG'] = True
 
 from prediction import predict_bdes, check_input
 from neighbors import find_neighbor_bonds
@@ -32,11 +33,12 @@ def result():
     form = ReusableForm(request.form)
     smiles = request.args['name']
 
-    if not smiles:
-        flash('Error! No input molecules found!')
-        return redirect(url_for('index'))
-
-    can_smiles = canonicalize_smiles(smiles)
+    try:
+        can_smiles = canonicalize_smiles(smiles)
+    except Exception:
+        flash('Error: "{}" SMILES string invalid. Please enter a valid SMILES '
+              'without quotes.'.format(smiles))
+        return render_template('index.html', form=form)
 
     is_outlier, missing_atom, missing_bond = check_input(can_smiles)
     if is_outlier:
@@ -56,7 +58,13 @@ def neighbor():
     form = ReusableForm(request.form)
     smiles = request.args['name']
     bond_index = int(request.args['bond_index'])
-    can_smiles = canonicalize_smiles(smiles)
+
+    try:
+        can_smiles = canonicalize_smiles(smiles)
+    except Exception:
+        flash('Error: "{}" SMILES string invalid. Please enter a valid SMILES '
+              'without quotes.'.format(smiles))
+        return render_template('index.html', form=form)
 
     is_outlier, missing_atom, missing_bond = check_input(can_smiles)
     if is_outlier:

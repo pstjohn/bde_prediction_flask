@@ -11,7 +11,7 @@
 		<script>
 			document.write('<link href="{{ url_for('static',filename='css/custom.css') }}?r='+ Math.floor(Math.random()*100) +'" rel="stylesheet" type="text/css" />');
 		</script>
-		<script type="text/javascript" language="javascript" src="{{ url_for('static', filename="jsme/jsme.nocache.js") }}"></script>
+		<script type="text/javascript" language="javascript" src="{{ url_for('static', filename="jsme/src/jsme/jsme.nocache.js") }}"></script>
 		<meta name="viewport" content = "width=device-width, initial-scale=1.0">
 	</head>
 	<body>
@@ -23,11 +23,11 @@
 			<h2>Online BDE Estimator</h2>
 			<form  action="/result" method="get" role="form">
 				{{ form.csrf }}
-				<div class="form-group">
+				<div class="form-group" id="smiles-input">
 					<input type="text" class="form-control" id="name" name="name" placeholder="Enter a SMILES string, e.g. 'CC1=CC(=CC(=C1)O)C'">
+					<button class="btn btn-success" data-toggle="modal" data-target="#jsmewindow" onclick="drawfromSmiles('name')"><span class="glyphicon glyphicon-pencil" style="margin-right:10px"></span>Draw</button>
+					<button type="submit" class="btn btn-success">Submit</button>
 				</div>
-				<a class="btn btn-success" data-toggle="modal" data-target="#jsmewindow" onclick="drawfromSmiles('name')" data style="margin-left:10px"><span class="glyphicon glyphicon-pencil" style="margin-right:10px"></span>Draw</a>
-				<button type="submit" class="btn btn-success">Submit</button>
 
 			<br>
 			{% with messages = get_flashed_messages(with_categories=true) %}

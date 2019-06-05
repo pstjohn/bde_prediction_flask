@@ -1,4 +1,8 @@
-from flask import Markup
+try:
+    import flask
+    from flask import Markup
+except ImportError:
+    flask = None
 
 from rdkit import Chem
 from rdkit.Chem import rdDepictor
@@ -30,7 +34,10 @@ def draw_bde(smiles, bond_index, figsize=(300, 300)):
 
     svg = svg.replace('svg:', '').replace(':svg', '')
     
-    return Markup(svg)
+    if flask:
+        return Markup(svg)
+    else:
+        return svg
 
 
 def draw_mol_outlier(smiles, missing_atoms, missing_bonds, figsize=(300, 300)):
@@ -65,7 +72,10 @@ def draw_mol_outlier(smiles, missing_atoms, missing_bonds, figsize=(300, 300)):
 
     svg = svg.replace('svg:', '').replace(':svg', '')
 
-    return Markup(svg)
+    if flask:
+        return Markup(svg)
+    else:
+        return svg
 
 
 def draw_mol(smiles, figsize=(300, 300)):
@@ -82,4 +92,7 @@ def draw_mol(smiles, figsize=(300, 300)):
 
     svg = svg.replace('svg:', '').replace(':svg', '')
     
-    return Markup(svg)
+    if flask:
+        return Markup(svg)
+    else:
+        return svg

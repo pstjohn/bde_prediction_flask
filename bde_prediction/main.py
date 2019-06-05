@@ -8,6 +8,7 @@ DEBUG = True
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
+app.config['DEBUG'] = True
 
 from prediction import predict_bdes, check_input
 from neighbors import find_neighbor_bonds
@@ -31,7 +32,13 @@ def index():
 def result():
     form = ReusableForm(request.form)
     smiles = request.args['name']
-    can_smiles = canonicalize_smiles(smiles)
+
+    try:
+        can_smiles = canonicalize_smiles(smiles)
+    except Exception:
+        flash('Error: "{}" SMILES string invalid. Please enter a valid SMILES '
+              'without quotes.'.format(smiles))
+        return render_template('index.html', form=form)
 
     is_outlier, missing_atom, missing_bond = check_input(can_smiles)
     if is_outlier:
@@ -46,13 +53,18 @@ def result():
         return render_template(
             "result.html", form=form, smiles=can_smiles, df=bde_df)
 
-
 @app.route("/neighbor", methods=['GET', 'POST'])
 def neighbor():
     form = ReusableForm(request.form)
     smiles = request.args['name']
     bond_index = int(request.args['bond_index'])
-    can_smiles = canonicalize_smiles(smiles)
+
+    try:
+        can_smiles = canonicalize_smiles(smiles)
+    except Exception:
+        flash('Error: "{}" SMILES string invalid. Please enter a valid SMILES '
+              'without quotes.'.format(smiles))
+        return render_template('index.html', form=form)
 
     is_outlier, missing_atom, missing_bond = check_input(can_smiles)
     if is_outlier:
@@ -69,3 +81,6 @@ def neighbor():
         return render_template(
             "neighbor.html", form=form, smiles=can_smiles, bde_row=bde_row,
             neighbor_df=neighbor_df)
+
+if __name__ == '__main__':
+    app.run()

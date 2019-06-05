@@ -1,3 +1,6 @@
 [submodule "bde_prediction/bde"]
 	path = bde_prediction/bde
 	url = git@github.com:pstjohn/bde.git
+[submodule "bde_prediction/static/jsme"]
+	path = bde_prediction/static/jsme
+	url = https://github.com/cheminfo/jsme.git

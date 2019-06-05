@@ -9,6 +9,7 @@ from drawing import draw_bde
 from prediction import preprocessor, model, predict_bdes
 
 embedding_model = GraphModel(model.inputs, [model.layers[-3].input])
+embedding_model._make_predict_function()
 bond_embed_df = pd.read_csv('model_files/20190604_bonds_for_neighbors.csv.gz')
 nbrs_pipe = joblib.load('model_files/20190604_bond_embedding_nbrs.p.z')
 

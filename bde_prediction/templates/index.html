@@ -5,10 +5,13 @@
 		<link rel="stylesheet" href = "{{ url_for('static',filename='css/bootstrap.min.css') }}">
 		<link rel="stylesheet" href = "{{ url_for('static',filename='css/bootstrap-theme.min.css') }}">
 		<link rel="stylesheet" media="print" href = "{{ url_for('static',filename='css/print.css') }}">
+		<script type="text/javascript" language="javascript" src="{{ url_for('static', filename="js/jquery.min.js") }}"></script>
+		<script type="text/javascript" language="javascript" src="{{ url_for('static', filename="js/bootstrap.min.js") }}"></script>
 		<!-- <link rel="stylesheet" href = "{{ url_for('static',filename='css/custom.css') }}"> -->
 		<script>
 			document.write('<link href="{{ url_for('static',filename='css/custom.css') }}?r='+ Math.floor(Math.random()*100) +'" rel="stylesheet" type="text/css" />');
 		</script>
+		<script type="text/javascript" language="javascript" src="{{ url_for('static', filename="jsme/src/jsme/jsme.nocache.js") }}"></script>
 		<meta name="viewport" content = "width=device-width, initial-scale=1.0">
 	</head>
 	<body>
@@ -20,11 +23,11 @@
 			<h2>Online BDE Estimator</h2>
 			<form  action="/result" method="get" role="form">
 				{{ form.csrf }}
-				<div class="form-group">
+				<div class="form-group" id="smiles-input">
 					<input type="text" class="form-control" id="name" name="name" placeholder="Enter a SMILES string, e.g. 'CC1=CC(=CC(=C1)O)C'">
+					<button class="btn btn-success" data-toggle="modal" data-target="#jsmewindow" onclick="drawfromSmiles('name')"><span class="glyphicon glyphicon-pencil" style="margin-right:10px"></span>Draw</button>
+					<button type="submit" class="btn btn-success">Submit</button>
 				</div>
-				<button type="submit" class="btn btn-success">Submit</button>
-			</form>
 
 			<br>
 			{% with messages = get_flashed_messages(with_categories=true) %}
@@ -48,14 +51,14 @@
 
 
 		</div>
-		<br>            
+		<br>
 
 		<div id="content" class="container">{% block content %}{% endblock %}</div>
 
 		<footer class="footer">
 			<div class='container'>
 				<p>
-				<em>Author:</em> Peter St. John<br/>
+				<em>Authors:</em> Peter St. John & Yanfei Guan<br/>
 				<em>Email:</em> peter.stjohn@nrel.gov
 				</p>
 			</div>
@@ -63,3 +66,36 @@
 
 	</body>
 </html>
+
+<!-- jsmewindow connected to the draw link by data-target -->
+<div class="modal fade" id="jsmewindow">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-body" style="height:430px;">
+				<div id="jsme_container" style="margin:auto" align="center"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="saveSmiles()">OK</button>
+</div>
+
+
+<script>
+    //this function will be called after the JavaScriptApplet code has been loaded.
+    function jsmeOnLoad() {
+        jsmeApplet = new JSApplet.JSME("jsme_container", "560px", "400px");
+   	}
+	 	//set the smile string of molecule drawing in the jsme window to the text
+	 	function saveSmiles() {
+		 		var smiles = jsmeApplet.smiles();
+				document.getElementById("name").value = smiles;
+	 	}
+	 	function drawfromSmiles(input) {
+				var smiles = document.getElementById(input).value;
+		 		if(smiles) {
+						jsmeApplet.readGenericMolecularInput(smiles);
+		 		}else {
+						jsmeApplet.reset();
+				}
+	 	}
+</script>

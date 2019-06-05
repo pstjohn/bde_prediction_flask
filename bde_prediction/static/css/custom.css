@@ -51,3 +51,11 @@ body {
   text-align: center;
   font-size: 20px;
   }
+
+#smiles-input {
+  display: flex;
+  }
+
+#smiles-input button {
+  margin-left: 10px;
+  }

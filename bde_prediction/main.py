@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, Markup, flash
+from flask import Flask, render_template, request, redirect, Markup, flash, url_for
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 
 import urllib.parse
@@ -29,6 +29,11 @@ def index():
 def result():
     form = ReusableForm(request.form)
     smiles = request.args['name']
+
+    if not smiles:
+        flash('Error! No input molecules found!')
+        return redirect(url_for('index'))
+
     can_smiles = canonicalize_smiles(smiles)
 
     is_outlier, missing_atom, missing_bond = check_input(can_smiles)
@@ -43,4 +48,5 @@ def result():
         return render_template(
             "result.html", form=form, smiles=can_smiles, df=bde_df)
 
-
+if __name__ == '__main__':
+    app.run()

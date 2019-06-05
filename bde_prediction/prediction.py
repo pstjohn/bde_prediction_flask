@@ -20,6 +20,7 @@ with warnings.catch_warnings():
     warnings.simplefilter('ignore')
     model = load_model(
         'model_files/best_model.hdf5', custom_objects=custom_layers)
+    model._make_predict_function()
 
 bde_dft = pd.read_csv('model_files/rdf_data_190531.csv.gz')
 
@@ -37,9 +38,9 @@ def check_input(smiles):
     missing_bond = np.array(
         list(set(iinput['bond_indices'][iinput['bond'] == 1])))
     missing_atom = np.arange(iinput['n_atom'])[iinput['atom'] == 1]
-    
+
     is_outlier = (missing_bond.size != 0) | (missing_atom.size != 0)
-    
+
     return is_outlier, missing_atom, missing_bond
 
 

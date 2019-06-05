@@ -17,9 +17,12 @@
 		<div class="media-body">
 			<h4 class='media-heading'>Bond {{ key + 1 }}</h4>
 			<strong>Bond Type:</strong> {{ value['bond_type'] }}<br/>
-			<strong>BDE(ML):</strong> {{ '{0:0.1f}'.format(value['bde_pred']) }} kcal/mol<br/>
+			<strong>BDE(ML):</strong><em> {{ '{0:0.1f}'.format(value['bde_pred']) }} kcal/mol</em><br/>
 			{% if value['has_dft_bde'] %}
-			<strong>BDE(DFT):</strong> {{ '{0:0.1f}'.format(value['bde']) }} kcal/mol<br/>
+			<strong>BDE(DFT):</strong><em> {{ '{0:0.1f}'.format(value['bde']) }} kcal/mol</em><br/>
+			{% else %}
+			<a href='neighbor?name={{ value['smiles_link'] }}&bond_index={{ value['bond_index'] }}'>Neighbors</a>
+
 			{% endif %}
 		</div>
 	</div>

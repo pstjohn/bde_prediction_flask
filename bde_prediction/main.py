@@ -35,6 +35,8 @@ def result():
 
     try:
         can_smiles = canonicalize_smiles(smiles)
+        if not can_smiles:
+            raise Exception
     except Exception:
         flash('Error: "{}" SMILES string invalid. Please enter a valid SMILES '
               'without quotes.'.format(smiles))
@@ -61,6 +63,8 @@ def neighbor():
 
     try:
         can_smiles = canonicalize_smiles(smiles)
+        if not can_smiles:
+            raise Exception
     except Exception:
         flash('Error: "{}" SMILES string invalid. Please enter a valid SMILES '
               'without quotes.'.format(smiles))

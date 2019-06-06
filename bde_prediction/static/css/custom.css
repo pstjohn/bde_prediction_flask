@@ -56,6 +56,6 @@ body {
   display: flex;
   }
 
-#smiles-input button {
+#smiles-input button, a {
   margin-left: 10px;
   }

@@ -193,3 +193,24 @@ td.visible-sm {
 .footer {
   display: none !important;
   }
+
+svg {
+  max-width: 120px !important;
+  max-height: 120px !important;
+  }
+
+em {
+  font-style: normal;
+}
+
+.media-left {
+  font-size: small;
+  }
+
+#input-header {
+  display: none;
+  }
+
+a.neighbor-link {
+  display: none !important;
+  }

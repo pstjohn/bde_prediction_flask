@@ -33,6 +33,7 @@ def draw_bde(smiles, bond_index, figsize=(300, 300)):
     svg = drawer.GetDrawingText()
 
     svg = svg.replace('svg:', '').replace(':svg', '')
+    svg = svg.replace('svg version', 'svg viewBox="0 0 200 200" version')
     
     if flask:
         return Markup(svg)

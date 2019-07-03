@@ -49,10 +49,10 @@ def predict_bdes(smiles):
     # Break bonds and get corresponding bond indexes where predictions are
     # valid
     frag_df = pd.DataFrame(fragment_iterator(smiles))
-    frag_df = frag_df[(frag_df[
-        ['delta_assigned_stereo', 'delta_unassigned_stereo']
-    ] == 0).all(1)].drop(
-        ['delta_assigned_stereo', 'delta_unassigned_stereo'], 1)
+    # frag_df = frag_df[(frag_df[
+    #     ['delta_assigned_stereo', 'delta_unassigned_stereo']
+    # ] == 0).all(1)].drop(
+    #     ['delta_assigned_stereo', 'delta_unassigned_stereo'], 1)
 
     inputs = preprocessor.predict((smiles,))
 

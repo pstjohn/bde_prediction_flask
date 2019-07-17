@@ -15,4 +15,4 @@ COPY bde_prediction /deploy/app
 WORKDIR /deploy/app
 
 # ENTRYPOINT "/bin/bash"
-ENTRYPOINT gunicorn --bind 0.0.0.0:$PORT main:app
+CMD gunicorn --bind 0.0.0.0:$PORT main:app

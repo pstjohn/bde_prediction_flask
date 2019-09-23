@@ -1,11 +1,12 @@
 {% extends "index.html" %}
 
 {% block content %}
-<h2>{{ smiles }}
-	{% if df['has_dft_bde'].any() %}
-	<span class="label label-success">In DFT Database</span>
+<div id="smiles-header">
+<h2 id="smiles-title">{{ smiles }}</h2>
+{% if df['has_dft_bde'].any() %}
+	<h2 class="label label-success">In DFT Database</h2>
 	{% endif %}
-</h2>
+</div>
 
 <h3>Bond Dissociation Energies (from weakest to strongest)</h3>
 

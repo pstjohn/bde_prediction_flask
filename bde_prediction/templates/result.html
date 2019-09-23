@@ -21,10 +21,8 @@
 			<strong>BDE(ML):</strong><em> {{ '{0:0.1f}'.format(value['bde_pred']) }} kcal/mol</em><br/>
 			{% if value['has_dft_bde'] %}
 			<strong>BDE(DFT):</strong><em> {{ '{0:0.1f}'.format(value['bde']) }} kcal/mol</em><br/>
-			{% else %}
-			<a class="neighbor-link" href='neighbor?name={{ value['smiles_link'] }}&bond_index={{ value['bond_index'] }}'>Neighbors</a></br/>
-
 			{% endif %}
+			<a class="neighbor-link" href='neighbor?name={{ value['smiles_link'] }}&bond_index={{ value['bond_index'] }}'>Neighbors</a></br/>
 			{% if (value['delta_assigned_stereo'] != 0) or (value['delta_unassigned_stereo'] != 0) %}
 			<em>Change in Stereochemistry</em><br/>
 			{% endif %}

@@ -35,11 +35,19 @@ html {
 body {
   margin-bottom: 0;
   min-height: 100vh;
+  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  display: -ms-flexbox;      /* TWEENER - IE 10 */
+  display: -webkit-flex;     /* NEW - Chrome */
+  display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+  flex-direction: column;
+  -webkit-flex-direction: column;
+  justify-content: space-between;
 }
 
 .footer {
   font-color: 	#A9A9A9;
-  position: absolute;
+  /* position: absolute; */
   bottom: 0;
   /* Set the fixed height of the footer here */
   width: 100%;
@@ -49,9 +57,35 @@ body {
 .footer p {
   margin: 10px;
   }￼￼
-  ￼CANCEL
-  ￼OK
+
+footer {
+  bottom: 0 !important;
+  width: 100%;
+  }
+
+#footer {
+  bottom: 0 !important;
+  width: 100%;
+  }
   
+#content {
+  min-height: 50%;
+}
+
+  #footer-block {
+    display: -webkit-box;
+  }
+
+@media (max-width: 768px) {
+  #footer-block {
+    display: -webkit-flex;
+  }
+}
+
+.modal-content {
+  width: fit-content;
+  width: -moz-min-content;
+} 
 
 #bde_reg {
   text-align: center;
@@ -60,7 +94,11 @@ body {
 
 #smiles-input {
   margin-top: 5em;
-  display: flex;
+  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  display: -ms-flexbox;      /* TWEENER - IE 10 */
+  display: -webkit-flex;     /* NEW - Chrome */
+  display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */ 
   }
 
 #smiles-title {

@@ -178,7 +178,7 @@
 	<!-- jsmewindow connected to the draw link by data-target -->
 	<div class="modal fade" id="jsmewindow">
 		<div class="modal-dialog modal-dialog-centered" style="left: -5%; margin-top: 0;">
-			<div class="modal-content" style="width: fit-content;">
+			<div class="modal-content">
 				<div class="modal-body" style="height:430px;">
 					<div id="jsme_container" style="margin:auto" align="center"></div>
 				</div>
@@ -213,9 +213,39 @@
 	<!--stopindex-->
 	<footer id="footer" class="hidden-print">
 	    <div class="container">
-	        <div class="row">
+	        <div id="footer-block" class="row">
+				 <!-- NREL is... -->
+				 <div class="col-md-2 order-md-1 ft-border-right">
+					<div class="row">
+						<div class="col-md-12 only-nrel">
+							<p class="nrel-attr">The National Renewable Energy Laboratory&#xA0;is a national laboratory
+								of the <a href="http://energy.gov/">U.S. Department of Energy</a>, <a href="http://energy.gov/eere/office-energy-efficiency-renewable-energy">Office of Energy Efficiency and Renewable Energy</a>,
+								operated by the <a href="http://www.allianceforsustainableenergy.org/">Alliance for Sustainable Energy, LLC</a>.</p>
+						</div>
+						<div class="col-lg-6">
+							<ul>
+								<li><a href="https://www.nrel.gov/security.html">Security &amp; Privacy Policy</a></li>
+								<li><a href="https://www.nrel.gov/accessibility.html">Accessibility</a></li>
+								<li><a href="https://www.nrel.gov/disclaimer.html">Disclaimer</a></li>
+								<li><a id="contact-link" href="https://www.nrel.gov/webmaster.html">Contact Us</a></li>
+							</ul>
+						</div>
+						<div class="col-lg-6">
+							<ul>
+								<li><a href="https://www.nrel.gov/careers/">Apply for a Job</a></li>
+								<li><a href="http://developer.nrel.gov/">Developers</a></li>
+								<li><a href="https://images.nrel.gov/bp/#/">Image Gallery</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<a href="http://energy.gov"><img class="logo" src="{{ url_for('static', filename="client/img/logo-doe-footer.png") }}" alt="U.S. Department of Energy"></a>
+						</div>
+					</div>
+				</div>
 	            <div class="col-md-10 order-md-2">
-	                <div class="row">
+	                <div>
 	                    <div class="col-md-2">
 	                        <p class="header"><a href="/index.html">Home </a>
 	                        </p>
@@ -277,36 +307,6 @@
 	                        </ul>
 	                    </div>
 	                </div>
-	            </div>
-	            <!-- NREL is... -->
-	            <div class="col-md-2 order-md-1 ft-border-right">
-	                <div class="row">
-	                    <div class="col-md-12 only-nrel">
-	                        <p class="nrel-attr">The National Renewable Energy Laboratory&#xA0;is a national laboratory
-	                            of the <a href="http://energy.gov/">U.S. Department of Energy</a>, <a href="http://energy.gov/eere/office-energy-efficiency-renewable-energy">Office of Energy Efficiency and Renewable Energy</a>,
-	                            operated by the <a href="http://www.allianceforsustainableenergy.org/">Alliance for Sustainable Energy, LLC</a>.</p>
-	                    </div>
-	                    <div class="col-lg-6">
-	                        <ul>
-	                            <li><a href="https://www.nrel.gov/security.html">Security &amp; Privacy Policy</a></li>
-	                            <li><a href="https://www.nrel.gov/accessibility.html">Accessibility</a></li>
-	                            <li><a href="https://www.nrel.gov/disclaimer.html">Disclaimer</a></li>
-	                            <li><a id="contact-link" href="https://www.nrel.gov/webmaster.html">Contact Us</a></li>
-	                        </ul>
-	                    </div>
-	                    <div class="col-lg-6">
-	                        <ul>
-	                            <li><a href="https://www.nrel.gov/careers/">Apply for a Job</a></li>
-	                            <li><a href="http://developer.nrel.gov/">Developers</a></li>
-	                            <li><a href="https://images.nrel.gov/bp/#/">Image Gallery</a></li>
-	                        </ul>
-	                    </div>
-	                </div>
-	            </div>
-	        </div>
-	        <div class="row">
-	            <div class="col-md-2 ft-border-right">
-					<a href="http://energy.gov"><img class="logo" src="{{ url_for('static', filename="client/img/logo-doe-footer.png") }}" alt="U.S. Department of Energy"></a>
 	            </div>
 	        </div>
 	    </div>

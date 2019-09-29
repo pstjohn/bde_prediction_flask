@@ -85,15 +85,12 @@
 		<header id="banner">
 			<div class="banner-logo">
 				<div class="container app">
-					<div class="row">
-						<div class="col-md-6 col-xl-4 order-md-2">
-							<a href="http://www.nrel.gov"><div class="logo"></div></a>
-						</div>
+					<div>
 						<div class="col-md-6 col-xl-8 order-md-1">
 							<a href="/" class="app-name"><h3>BDE Estimator</h3></a>
-							<p>
-							<em> by <a href="https://www.nrel.gov/research/peter-stjohn.html" >Peter St. John</a></em>
-							</p>
+						</div>
+						<div class="col-md-6 col-xl-4 order-md-2">
+							<a href="http://www.nrel.gov"><div class="logo"></div></a>
 						</div>
 					</div>
 				</div>
@@ -109,6 +106,13 @@
 		<div class="container" id="input-header">
 
 
+				<div>
+						<p>
+							<span><em> by
+								<a href="https://www.nrel.gov/research/peter-stjohn.html" >Peter St. John</a>, Yanfei Guan, Yeonjoon Kim, <a href="https://www.nrel.gov/research/seonah-kim.html" >Seonah Kim</a>, and <a href="http://www.chem.colostate.edu/person/?id=234D5F1C7E4CBA9E192AB2B2837D6360">Robert Paton</a>
+							</em></span>
+						</p>
+					</div>
 			<form  action="/result" method="get" role="form">
 				{{ form.csrf }}
 				<div class="form-group" id="smiles-input">

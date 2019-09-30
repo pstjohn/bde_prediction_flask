@@ -125,4 +125,7 @@ footer {
   font-size: 100%;
   }
 
-  
+div#affiliation p {
+  font-style: italic;
+  margin-bottom: 0em;
+  }

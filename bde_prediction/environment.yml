@@ -14,8 +14,6 @@ dependencies:
 - numpy
 - wtforms
 - joblib
-- tensorflow
 - pip
 - pip:
-  - git+git://github.com/keras-team/keras.git
   - nfp

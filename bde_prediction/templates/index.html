@@ -19,7 +19,7 @@
 		<meta charset="utf-8">
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
-	    <title>Application Title</title>
+	    <title>ALFABET</title>
 	    
 	    <!-- == APPLICATION HEAD == -->
 		<!-- Google Tag Manager -->
@@ -85,9 +85,11 @@
 		<header id="banner">
 			<div class="banner-logo">
 				<div class="container app">
-					<div>
+					<div class="row">
 						<div class="col-md-6 col-xl-8 order-md-1">
-							<a href="/" class="app-name"><h3>BDE Estimator</h3></a>
+							<a href="/" class="app-name">
+								<img id="alfabet_logo" src="{{ url_for('static', filename="image/logo_wide.svg") }}" alt="ALFABET logo">
+								<h3><b>A</b> machine-<b>L</b>earning derived, <b>F</b>ast, <b>A</b>ccurate <b>B</b>ond dissociation <b>E</b>nthalpy <b>T</b>ool</h3></a>
 						</div>
 						<div class="col-md-6 col-xl-4 order-md-2">
 							<a href="http://www.nrel.gov"><div class="logo"></div></a>
@@ -179,10 +181,9 @@
 	
 	<!-- jsmewindow connected to the draw link by data-target -->
 	<div class="modal fade" id="jsmewindow">
-		<div class="modal-dialog modal-dialog-centered" style="left: -5%; margin-top: 0;">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
 			<div class="modal-content">
-				<div class="modal-body" style="height:430px;">
-					<div id="jsme_container" style="margin:auto" align="center"></div>
+				<div id="jsme_container" class="modal-body" style="height:430px;">
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -192,9 +193,14 @@
 </div>
 </div>
 	<script>
+
+		$('#jsmewindow').on('shown.bs.modal', function (e) {
+		jsmeApplet.setWidth($("#jsme_container").width() + "px");
+		});
+
 		//this function will be called after the JavaScriptApplet code has been loaded.
 		function jsmeOnLoad() {
-			jsmeApplet = new JSApplet.JSME("jsme_container", "560px", "400px");
+			jsmeApplet = new JSApplet.JSME("jsme_container", "400px", "400px");
 		}
 			//set the smile string of molecule drawing in the jsme window to the text
 			function saveSmiles() {

@@ -73,6 +73,7 @@
 		
 	</head>
 	<body>
+		
 		<!-- Google Tag Manager (noscript) -->
 	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KG7PVKB"
 		height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -117,7 +118,7 @@
 						<p><sup>1</sup>Biosciences Center, National Renewable Energy Laboratory</p>
 						<p><sup>2</sup>Department of Chemistry, Colorado State University, Fort Collins</p></em>
 					</div>
-			<form  action="/result" method="get" role="form">
+			<form  action="{{ url_for("result") }}" method="get" role="form">
 				{{ form.csrf }}
 				<div class="form-group" id="smiles-input">
 					<input type="text" class="form-control" id="name" name="name" placeholder="Enter a SMILES string, e.g. 'CC1=CC(=CC(=C1)O)C'">
@@ -195,8 +196,10 @@
 	<script>
 
 		$('#jsmewindow').on('shown.bs.modal', function (e) {
-		jsmeApplet.setWidth($("#jsme_container").width() + "px");
+			jsmeApplet.setWidth($("#jsme_container").width() + "px");
 		});
+
+		window.onresize = e => { jsmeApplet.setWidth($("#jsme_container").width() + "px") };
 
 		//this function will be called after the JavaScriptApplet code has been loaded.
 		function jsmeOnLoad() {

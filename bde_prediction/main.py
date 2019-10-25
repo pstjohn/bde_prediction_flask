@@ -1,14 +1,37 @@
-from flask import Flask, render_template, request, redirect, Markup, flash
+from flask import Flask, render_template, request, redirect, Markup, flash, url_for
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
-
+from werkzeug.serving import run_simple
+from werkzeug.wsgi import DispatcherMiddleware
+from os import environ
 import urllib.parse
+
 
 # App config.
 DEBUG = True
+
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 app.config['DEBUG'] = True
+
+try:
+    # Need try->if instead of .get because environment gets garbled by gunicorn and 
+    #   rewrites the variable to an empty string, which will return instead of '/'
+    if environ['APP_ROOT']:
+        APPLICATION_ROOT='/bde' # Prevent unnecessary backslash from trickling down
+    app.config["APPLICATION_ROOT"] = APPLICATION_ROOT
+
+    app.config.update(APPLICATION_ROOT=APPLICATION_ROOT)
+        
+    def simple(env, resp):
+        resp('200 OK', [('Content-Type', 'text/plain')])
+        return [b'HTTP exchange successful, but an internal redirect error occurred.']
+        
+    app.wsgi_app = DispatcherMiddleware(simple, {APPLICATION_ROOT : app.wsgi_app})
+    
+except:
+    pass
+
 
 from prediction import predict_bdes, check_input
 from neighbors import find_neighbor_bonds

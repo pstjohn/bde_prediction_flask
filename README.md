@@ -24,3 +24,12 @@ gunicorn --bind 0.0.0.0:2222 main:app
 ```
 
 Then browse to 0.0.0.0:2222 in a web browser
+
+### Alternatively, with Docker:
+
+```bash
+IMAGE_NAME="alfabet" && docker build --tag $IMAGE_NAME /path/to/repository
+
+PORT=2222 && docker run --detach --env PORT=$PORT --publish $PORT:$PORT $IMAGE_NAME
+```
+Then browse to 0.0.0.0:2222 in a web browser

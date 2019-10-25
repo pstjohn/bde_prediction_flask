@@ -195,12 +195,12 @@
 	<script>
 
 		$('#jsmewindow').on('shown.bs.modal', function (e) {
-		jsmeApplet.setWidth($("#jsme_container").width() + "px");
+			jsmeApplet.setWidth($("#jsme_container").width() + "px");
 		});
 
 		//this function will be called after the JavaScriptApplet code has been loaded.
 		function jsmeOnLoad() {
-			jsmeApplet = new JSApplet.JSME("jsme_container", "400px", "400px");
+			jsmeApplet = new JSApplet.JSME("jsme_container", "768px", "400px");
 		}
 			//set the smile string of molecule drawing in the jsme window to the text
 			function saveSmiles() {

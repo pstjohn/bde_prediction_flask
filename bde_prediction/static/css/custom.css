@@ -118,7 +118,6 @@ footer {
   }
 
 div#affiliation p {
-  font-style: italic;
   margin-bottom: 0em;
   }
 
@@ -129,3 +128,9 @@ div#content {
 img#alfabet_logo {
   max-width: 100%;
   }
+
+a#doi {
+  padding-left: 20px;
+  }
+
+

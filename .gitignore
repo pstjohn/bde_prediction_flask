@@ -96,3 +96,6 @@ ENV/
 .ropeproject
 
 .DS_Store
+
+deploy_script.py
+deploy_notes

@@ -133,4 +133,4 @@ a#doi {
   padding-left: 20px;
   }
 
-
+.row:before, .row:after {display: none !important;}

@@ -110,6 +110,8 @@ def atom_featurizer(atom):
 
     return str((
         atom.GetSymbol(),
+        atom.GetNumRadicalElectrons(),
+        atom.GetFormalCharge(),
         atom.GetChiralTag(),
         atom.GetIsAromatic(),
         get_ring_size(atom, max_size=6),

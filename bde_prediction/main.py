@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, Markup, flash, url_for
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 from werkzeug.serving import run_simple
-from werkzeug.wsgi import DispatcherMiddleware
+# from werkzeug.wsgi import DispatcherMiddleware
 from os import environ
 import urllib.parse
 

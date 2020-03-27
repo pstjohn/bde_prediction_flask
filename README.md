@@ -14,9 +14,6 @@ The dependencies are therefore
 * flask
 * wtforms
 
-## To update submodules (add new compounds)
-`git submodule foreach git pull origin master`
-
 ## To launch a local server:
 ```
 cd bde_prediction
@@ -27,9 +24,14 @@ Then browse to 0.0.0.0:2222 in a web browser
 
 ### Alternatively, with Docker:
 
+After cloning, initialize the submodules with 
 ```bash
-IMAGE_NAME="alfabet" && docker build --tag $IMAGE_NAME /path/to/repository
+git submodule init
+git submodule update
+```
 
-PORT=2222 && docker run --detach --env PORT=$PORT --publish $PORT:$PORT $IMAGE_NAME
+```bash
+docker build -t bde .
+docker run -e PORT=2222 -p 2222:2222 -t bde
 ```
 Then browse to 0.0.0.0:2222 in a web browser

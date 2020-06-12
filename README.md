@@ -24,12 +24,6 @@ Then browse to 0.0.0.0:2222 in a web browser
 
 ### Alternatively, with Docker:
 
-After cloning, initialize the submodules with 
-```bash
-git submodule init
-git submodule update
-```
-
 ```bash
 docker build -t bde .
 docker run -e PORT=2222 -p 2222:2222 -t bde

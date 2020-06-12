@@ -12,6 +12,7 @@ RUN mkdir -p /deploy/app
 COPY bde_prediction /deploy/app
 
 WORKDIR /deploy/app
+ENV PYTHONPATH "${PYTHONPATH}:/deploy/app"
 
-# ENTRYPOINT "/bin/bash"
-CMD gunicorn --bind 0.0.0.0:$PORT main:app
+#ENTRYPOINT "/bin/bash"
+CMD gunicorn --bind 0.0.0.0:$PORT wsgi:app

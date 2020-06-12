@@ -15,6 +15,7 @@ dependencies:
 - numpy
 - wtforms
 - joblib
+- pytest
 - pip
 - pip:
-  - nfp
+  - nfp==0.0.7

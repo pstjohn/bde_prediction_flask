@@ -1,5 +1,6 @@
 # BDE Flask App
 
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/pstjohn/bde_prediction_flask)
 
 The only tricky dependency here is [`rdkit`](http://www.rdkit.org/docs/Install.html), but it can be installed with 
 ```

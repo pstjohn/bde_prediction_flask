@@ -23,6 +23,13 @@ gunicorn --bind 0.0.0.0:2222 main:app
 
 Then browse to 0.0.0.0:2222 in a web browser
 
+OR
+
+```
+FLASK_APP=wsgi.py flask run
+```
+and open localhost:5000
+
 ### Alternatively, with Docker:
 
 ```bash

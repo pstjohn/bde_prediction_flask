@@ -1,21 +1,17 @@
 import os
-import pandas as pd
 import joblib
 
-from nfp import GraphModel
-from bde_flask.preprocessor_utils import ConcatGraphSequence
+import tensorflow as tf
+import nfp
 
 from bde_flask.drawing import draw_bde
-from bde_flask.prediction import preprocessor, model
+from bde_flask.prediction import preprocessor, model, bde_dft
 
 currdir = os.path.dirname(os.path.abspath(__file__))
+embedding_model = tf.keras.Model(model.inputs, [model.layers[-7].output])
 
-embedding_model = GraphModel(model.inputs, [model.layers[-3].input])
-embedding_model._make_predict_function()
-bond_embed_df = pd.read_csv(
-    os.path.join(currdir, 'model_files/20190604_bonds_for_neighbors.csv.gz'))
 nbrs_pipe = joblib.load(
-    os.path.join(currdir, 'model_files/20190604_bond_embedding_nbrs.p.z'))
+    os.path.join(currdir, 'model_files/20200615_bond_embedding_nbrs.p.z'))
 
 def pipe_kneighbors(pipe, X):
     Xt = pipe.steps[0][-1].transform(X)
@@ -23,18 +19,20 @@ def pipe_kneighbors(pipe, X):
 
 def find_neighbor_bonds(smiles, bond_index):
 
-    inputs = preprocessor.predict((smiles,))
-    embeddings = embedding_model.predict_generator(
-        ConcatGraphSequence(inputs, batch_size=128, shuffle=False), verbose=0)
+    ds = tf.data.Dataset.from_generator(
+        lambda: (preprocessor.construct_feature_matrices(item, train=False)
+                 for item in (smiles,)),
+        output_types=preprocessor.output_types,
+        output_shapes=preprocessor.output_shapes).batch(batch_size=1)
 
-    distances, indices = pipe_kneighbors(
-    nbrs_pipe, embeddings[inputs[0]['bond_indices'] == bond_index])
+    embeddings = embedding_model.predict(ds)
+    distances, indices = pipe_kneighbors(nbrs_pipe, embeddings[:, bond_index, :])
 
-    neighbor_df = bond_embed_df.dropna().iloc[indices.flatten()]
+    neighbor_df = bde_dft.dropna().iloc[indices.flatten()]
     neighbor_df['distance'] = distances.flatten()
     neighbor_df = neighbor_df.drop_duplicates(
         ['molecule', 'fragment1', 'fragment2']).sort_values('distance')
     neighbor_df['svg'] = neighbor_df.apply(
-        lambda x: draw_bde(x.molecule, x.bond_index, figsize=(200,200)), 1)
+        lambda x: draw_bde(x.molecule, x.bond_index), 1)
 
     return neighbor_df

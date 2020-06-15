@@ -17,3 +17,11 @@ def test_result(client):
 def test_neighbors(client):
     rv = client.get('/neighbor?name=c1ccccc1&bond_index=6')
     assert b'c1ccccc1' in rv.data
+
+def test_out_of_scope(client):
+    rv = client.get('/result?name=C%5BC%5D')
+    assert b'Molecule out of scope' in rv.data
+
+def test_invalid(client):
+    rv = client.get('/result?name=')
+    assert b'Please enter a valid SMILES without quotes' in rv.data

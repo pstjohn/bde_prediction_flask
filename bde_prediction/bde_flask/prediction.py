@@ -1,33 +1,66 @@
-import sys
-sys.path.append("bde")
-
 import os
-import pickle
 import warnings
 
 import numpy as np
 import pandas as pd
-from keras.models import load_model
+import tensorflow as tf
+import nfp
 
 from bde_flask.fragment import fragment_iterator
-from bde_flask.preprocessor_utils import ConcatGraphSequence
-from nfp import custom_layers
-
 from bde_flask.drawing import draw_bde
+
+from rdkit import RDLogger
+RDLogger.DisableLog('rdApp.*')
 
 currdir = os.path.dirname(os.path.abspath(__file__))
 
-with open(os.path.join(currdir, 'model_files/preprocessor.p'), 'rb') as f:
-    preprocessor = pickle.load(f)
+                
+def atom_featurizer(atom):
+    """ Return an integer hash representing the atom type
+    """
+
+    return str((
+        atom.GetSymbol(),
+        atom.GetNumRadicalElectrons(),
+        atom.GetFormalCharge(),
+        atom.GetChiralTag(),
+        atom.GetIsAromatic(),
+        nfp.get_ring_size(atom, max_size=6),
+        atom.GetDegree(),
+        atom.GetTotalNumHs(includeNeighbors=True)
+    ))
+
+
+def bond_featurizer(bond, flipped=False):
+    
+    if not flipped:
+        atoms = "{}-{}".format(
+            *tuple((bond.GetBeginAtom().GetSymbol(),
+                    bond.GetEndAtom().GetSymbol())))
+    else:
+        atoms = "{}-{}".format(
+            *tuple((bond.GetEndAtom().GetSymbol(),
+                    bond.GetBeginAtom().GetSymbol())))
+    
+    btype = str(bond.GetBondType())
+    ring = 'R{}'.format(nfp.get_ring_size(bond, max_size=6)) if bond.IsInRing() else ''
+    
+    return " ".join([atoms, btype, ring]).strip()
+
+
+preprocessor = nfp.SmilesPreprocessor(
+    atom_features=atom_featurizer, bond_features=bond_featurizer)
+
+preprocessor.from_json(os.path.join(currdir, 'model_files/preprocessor.json'))
 
 with warnings.catch_warnings():
     warnings.simplefilter('ignore')
-    model = load_model(
+    model = tf.keras.models.load_model(
         os.path.join(currdir, 'model_files/best_model.hdf5'),
-        custom_objects=custom_layers)
-    model._make_predict_function()
+        custom_objects=nfp.custom_objects)
 
-bde_dft = pd.read_csv(os.path.join(currdir, 'model_files/rdf_data_190531.csv.gz'))
+bde_dft = pd.read_csv(os.path.join(
+    currdir, 'model_files/20200615_bonds_for_neighbors.csv.gz'))
 
 def check_input(smiles):
     """ Check the given SMILES to ensure it's present in the model's
@@ -38,7 +71,7 @@ def check_input(smiles):
 
     """
 
-    iinput = preprocessor.predict((smiles,))[0]
+    iinput = preprocessor.construct_feature_matrices(smiles, train=False)
 
     missing_bond = np.array(
         list(set(iinput['bond_indices'][iinput['bond'] == 1])))
@@ -54,28 +87,31 @@ def predict_bdes(smiles):
     # Break bonds and get corresponding bond indexes where predictions are
     # valid
     frag_df = pd.DataFrame(fragment_iterator(smiles))
-    # frag_df = frag_df[(frag_df[
-    #     ['delta_assigned_stereo', 'delta_unassigned_stereo']
-    # ] == 0).all(1)].drop(
-    #     ['delta_assigned_stereo', 'delta_unassigned_stereo'], 1)
 
-    inputs = preprocessor.predict((smiles,))
+    ds = tf.data.Dataset.from_generator(
+        lambda: (preprocessor.construct_feature_matrices(item, train=False)
+                 for item in (smiles,)),
+        output_types=preprocessor.output_types,
+        output_shapes=preprocessor.output_shapes).batch(batch_size=1)
 
-    pred = model.predict_generator(
-        ConcatGraphSequence(inputs, batch_size=1, shuffle=False), verbose=0)
+    preds = model.predict(ds)
 
-    bde_df = pd.DataFrame(inputs[0]['bond_indices'], columns=['bond_index'])
-    bde_df['bde_pred'] = pred
-    bde_df = bde_df.groupby('bond_index').mean().reset_index()
+    # Reindex predictions to fragment dataframe
+    frag_df['bde_pred'] = pd.Series(preds.squeeze())\
+        .reindex(frag_df.bond_index).reset_index(drop=True)
 
-    pred_df = frag_df.merge(bde_df, on=['bond_index'], how='left')
-    pred_df = pred_df.sort_values('bde_pred').drop_duplicates(
+    # Add DFT calculated bdes
+    frag_df = frag_df.merge(bde_dft[['molecule', 'bond_index', 'bde', 'set']],
+                            on=['molecule', 'bond_index'], how='left')
+
+    # Drop duplicate entries and sort from weakest to strongest
+    frag_df = frag_df.sort_values('bde_pred').drop_duplicates(
         ['fragment1', 'fragment2']).reset_index()
-    pred_df['svg'] = pred_df.apply(
-        lambda x: draw_bde(x.molecule, x.bond_index, figsize=(200,200)), 1)
-    pred_df = pred_df.merge(
-        bde_dft[['molecule', 'bond_index', 'bde']],
-        on=['molecule', 'bond_index'], how='left')
-    pred_df['has_dft_bde'] = pred_df.bde.notna()
 
-    return pred_df
+    # Draw SVGs
+    frag_df['svg'] = frag_df.apply(
+        lambda x: draw_bde(x.molecule, x.bond_index), 1)
+
+    frag_df['has_dft_bde'] = frag_df.bde.notna()
+
+    return frag_df

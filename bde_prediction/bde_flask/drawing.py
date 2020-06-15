@@ -8,10 +8,15 @@ from rdkit import Chem
 from rdkit.Chem import rdDepictor
 from rdkit.Chem.Draw import rdMolDraw2D
 
-def draw_bde(smiles, bond_index, figsize=(300, 300)):
+def draw_bde(smiles, bond_index, figwidth=200):
     
     mol = Chem.MolFromSmiles(smiles)
     bond_index = int(bond_index)
+    
+    if mol.GetNumAtoms() > 20:
+        figwidth=300
+    if mol.GetNumAtoms() > 40:
+        figwidth=400
 
     if bond_index >= mol.GetNumBonds():
 
@@ -25,15 +30,17 @@ def draw_bde(smiles, bond_index, figsize=(300, 300)):
     if not mol.GetNumConformers():
         rdDepictor.Compute2DCoords(mol)
 
-    drawer = rdMolDraw2D.MolDraw2DSVG(*figsize)
-    drawer.SetFontSize(.6)
+    drawer = rdMolDraw2D.MolDraw2DSVG(figwidth, figwidth)
+    drawer.drawOptions().fixedBondLength=30
+    drawer.drawOptions().highlightBondWidthMultiplier = 20
+    
     drawer.DrawMolecule(mol, highlightAtoms=[], highlightBonds=[bond_index,])
 
     drawer.FinishDrawing()
     svg = drawer.GetDrawingText()
 
     svg = svg.replace('svg:', '').replace(':svg', '')
-    svg = svg.replace('svg version', 'svg viewBox="0 0 200 200" version')
+    svg = svg.replace('svg version', f'svg viewBox="0 0 {figwidth} {figwidth}" version')
     
     if flask:
         return Markup(svg)

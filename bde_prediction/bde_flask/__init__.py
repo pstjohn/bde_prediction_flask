@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, Markup, flash, url_for
-from wtforms import Form, TextField, validators, StringField, SubmitField
+from flask import Flask, render_template, request, flash, jsonify
+from wtforms import Form, StringField, validators
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from os import environ
 import urllib.parse
@@ -39,7 +39,7 @@ from bde_flask.drawing import draw_mol_outlier
 from bde_flask.fragment import canonicalize_smiles
 
 class ReusableForm(Form):
-    name = TextField('SMILES:', validators=[validators.required()])
+    name = StringField('SMILES:', validators=[validators.DataRequired()])
 
 def quote(x):
     return urllib.parse.quote(x, safe='')
@@ -107,6 +107,50 @@ def neighbor():
         return render_template(
             "neighbor.html", form=form, smiles=can_smiles, bde_row=bde_row,
             neighbor_df=neighbor_df)
+
+
+@app.route("/api/<string:smiles>", methods=['GET'])
+def api(smiles):
+
+    try:
+        can_smiles = canonicalize_smiles(smiles)
+        if not can_smiles:
+            raise Exception
+    except Exception:
+        return jsonify({'status': 'invalid smiles'})
+
+    is_outlier, missing_atom, missing_bond = check_input(can_smiles)
+    if is_outlier:
+        return jsonify({'status': 'outlier',
+                        'missing atoms': missing_atom.tolist(),
+                        'missing bond': missing_bond.tolist()})
+
+    bde_df = predict_bdes(can_smiles, draw=False)
+    return jsonify({'status': 'ok', 
+                    'results': bde_df.to_dict(orient='records')})
+
+
+@app.route("/api/neighbors/<string:smiles>/<int:bond_index>", methods=['GET'])
+def neighbors_api(smiles, bond_index):
+
+    try:
+        can_smiles = canonicalize_smiles(smiles)
+        if not can_smiles:
+            raise Exception
+    except Exception:
+        return jsonify({'status': 'invalid smiles'})
+
+    is_outlier, missing_atom, missing_bond = check_input(can_smiles)
+    if is_outlier:
+        return jsonify({'status': 'outlier',
+                        'missing atoms': missing_atom.tolist(),
+                        'missing bond': missing_bond.tolist()})
+
+    neighbor_df = find_neighbor_bonds(
+        can_smiles, bond_index, draw=False).drop(['rid', 'bdfe'], 1)
+
+    return jsonify({'status': 'ok', 
+                    'results': neighbor_df.to_dict(orient='records')})
 
 
 if __name__ == '__main__':

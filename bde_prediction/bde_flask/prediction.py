@@ -82,7 +82,7 @@ def check_input(smiles):
     return is_outlier, missing_atom, missing_bond
 
 
-def predict_bdes(smiles):
+def predict_bdes(smiles, draw=True):
 
     # Break bonds and get corresponding bond indexes where predictions are
     # valid
@@ -106,11 +106,12 @@ def predict_bdes(smiles):
 
     # Drop duplicate entries and sort from weakest to strongest
     frag_df = frag_df.sort_values('bde_pred').drop_duplicates(
-        ['fragment1', 'fragment2']).reset_index()
+        ['fragment1', 'fragment2']).reset_index(drop=True)
 
     # Draw SVGs
-    frag_df['svg'] = frag_df.apply(
-        lambda x: draw_bde(x.molecule, x.bond_index), 1)
+    if draw:
+        frag_df['svg'] = frag_df.apply(
+            lambda x: draw_bde(x.molecule, x.bond_index), 1)
 
     frag_df['has_dft_bde'] = frag_df.bde.notna()
 

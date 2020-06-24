@@ -17,7 +17,7 @@ def pipe_kneighbors(pipe, X):
     Xt = pipe.steps[0][-1].transform(X)
     return pipe.steps[-1][-1].kneighbors(Xt)
 
-def find_neighbor_bonds(smiles, bond_index):
+def find_neighbor_bonds(smiles, bond_index, draw=True):
 
     ds = tf.data.Dataset.from_generator(
         lambda: (preprocessor.construct_feature_matrices(item, train=False)
@@ -32,7 +32,9 @@ def find_neighbor_bonds(smiles, bond_index):
     neighbor_df['distance'] = distances.flatten()
     neighbor_df = neighbor_df.drop_duplicates(
         ['molecule', 'fragment1', 'fragment2']).sort_values('distance')
-    neighbor_df['svg'] = neighbor_df.apply(
-        lambda x: draw_bde(x.molecule, x.bond_index), 1)
+
+    if draw:
+        neighbor_df['svg'] = neighbor_df.apply(
+            lambda x: draw_bde(x.molecule, x.bond_index), 1)
 
     return neighbor_df

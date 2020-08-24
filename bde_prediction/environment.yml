@@ -18,4 +18,4 @@ dependencies:
 - pytest
 - pip
 - pip:
-  - nfp==0.0.7
+  - nfp==0.0.8

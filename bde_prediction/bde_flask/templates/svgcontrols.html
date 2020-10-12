@@ -31,13 +31,13 @@ let panZoomOpts = {
         // ,eventsListenerElement: null
         }
 
-for (let svg_i=0; svg_i < svgs.length; svg_i++) {
-    try {
-        if (svgs[svg_i].parentElement.parentElement.parentElement.parentElement.parentElement.id === "jsme_container") continue
-    }
-    catch { continue }
-    finally {
-        panzooms[svg_i] = svgPanZoom(svgs[svg_i], panZoomOpts)
-    }
-}
+// for (let svg_i=0; svg_i < svgs.length; svg_i++) {
+//     try {
+//         if (svgs[svg_i].parentElement.parentElement.parentElement.parentElement.parentElement.id === "jsme_container") continue
+//     }
+//     catch { continue }
+//     finally {
+//         panzooms[svg_i] = svgPanZoom(svgs[svg_i], panZoomOpts)
+//     }
+// }
 </script>

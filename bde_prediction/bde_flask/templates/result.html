@@ -19,8 +19,10 @@
 			<h4 class='media-heading'>Bond {{ key + 1 }}</h4>
 			<strong>Bond Type:</strong> {{ value['bond_type'] }}<br/>
 			<strong>BDE(ML):</strong><em> {{ '{0:0.1f}'.format(value['bde_pred']) }} kcal/mol</em><br/>
+			<strong>BDFE(ML):</strong><em> {{ '{0:0.1f}'.format(value['bdfe_pred']) }} kcal/mol</em><br/>
 			{% if value['has_dft_bde'] %}
 			<strong>BDE(DFT):</strong><em> {{ '{0:0.1f}'.format(value['bde']) }} kcal/mol</em><br/>
+			<strong>BDFE(DFT):</strong><em> {{ '{0:0.1f}'.format(value['bdfe']) }} kcal/mol</em><br/>
 			{% endif %}
 			{% if not value['is_valid_stereo'] %}
 			<span class="badge badge-light">Stereochemistry created</span><br/>

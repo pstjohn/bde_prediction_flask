@@ -2,16 +2,15 @@ import os
 import joblib
 
 import tensorflow as tf
-import nfp
 
 from bde_flask.drawing import draw_bde
 from bde_flask.prediction import preprocessor, model, bde_dft
 
 currdir = os.path.dirname(os.path.abspath(__file__))
-embedding_model = tf.keras.Model(model.inputs, [model.layers[-7].output])
+embedding_model = tf.keras.Model(model.inputs, [model.layers[17].output])
 
 nbrs_pipe = joblib.load(
-    os.path.join(currdir, 'model_files/20200615_bond_embedding_nbrs.p.z'))
+    os.path.join(currdir, 'model_files/20201012_bond_embedding_nbrs.p.z'))
 
 def pipe_kneighbors(pipe, X):
     Xt = pipe.steps[0][-1].transform(X)

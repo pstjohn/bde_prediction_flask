@@ -57,10 +57,11 @@ with warnings.catch_warnings():
     warnings.simplefilter('ignore')
     model = tf.keras.models.load_model(
         os.path.join(currdir, 'model_files/best_model.hdf5'),
-        custom_objects=nfp.custom_objects)
+        custom_objects=nfp.custom_objects,
+        compile=False)
 
 bde_dft = pd.read_csv(os.path.join(
-    currdir, 'model_files/20200615_bonds_for_neighbors.csv.gz'))
+    currdir, 'model_files/20201012_bonds_for_neighbors.csv.gz'))
 
 def check_input(smiles):
     """ Check the given SMILES to ensure it's present in the model's
@@ -94,14 +95,16 @@ def predict_bdes(smiles, draw=True):
         output_types=preprocessor.output_types,
         output_shapes=preprocessor.output_shapes).batch(batch_size=1)
 
-    preds = model.predict(ds)
+    bde_pred, bdfe_pred = model.predict(ds)
 
     # Reindex predictions to fragment dataframe
-    frag_df['bde_pred'] = pd.Series(preds.squeeze())\
+    frag_df['bde_pred'] = pd.Series(bde_pred.squeeze())\
+        .reindex(frag_df.bond_index).reset_index(drop=True)
+    frag_df['bdfe_pred'] = pd.Series(bdfe_pred.squeeze())\
         .reindex(frag_df.bond_index).reset_index(drop=True)
 
     # Add DFT calculated bdes
-    frag_df = frag_df.merge(bde_dft[['molecule', 'bond_index', 'bde', 'set']],
+    frag_df = frag_df.merge(bde_dft[['molecule', 'bond_index', 'bde', 'bdfe', 'set']],
                             on=['molecule', 'bond_index'], how='left')
 
     # Drop duplicate entries and sort from weakest to strongest

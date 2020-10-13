@@ -17,4 +17,4 @@ dependencies:
 - pip
 - pip:
   - tensorflow>=2.3
-  - nfp==0.1.1
+  - nfp>=0.1.4

@@ -14,4 +14,4 @@ WORKDIR /deploy/app
 ENV PYTHONPATH "${PYTHONPATH}:/deploy/app"
 
 #ENTRYPOINT "/bin/bash"
-CMD gunicorn --worker-tmp-dir /dev/shm --bind 0.0.0.0:$PORT wsgi:app
+CMD gunicorn --bind 0.0.0.0:$PORT wsgi:app

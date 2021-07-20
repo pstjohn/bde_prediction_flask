@@ -18,7 +18,7 @@ The dependencies are therefore
 ## To launch a local server:
 ```
 cd bde_prediction
-gunicorn --bind 0.0.0.0:2222 wgsi:app
+gunicorn --bind 0.0.0.0:2222 wsgi:app
 ```
 
 Then browse to 0.0.0.0:2222 in a web browser

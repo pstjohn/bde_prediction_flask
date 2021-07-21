@@ -16,5 +16,5 @@ dependencies:
 - pytest
 - pip
 - pip:
-  - tensorflow>=2.3
-  - nfp>=0.1.4
+  - tensorflow==2.3
+  - nfp==0.1.4

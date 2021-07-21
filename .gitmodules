@@ -4,3 +4,6 @@
 [submodule "bde_prediction/static/jsme"]
 	path = bde_prediction/static/jsme
 	url = https://github.com/cheminfo/jsme.git
+[submodule "bde_prediction/bde_flask/static/nrel-app-template-bootstrap4"]
+	path = bde_prediction/bde_flask/static/nrel-app-template-bootstrap4
+	url = https://github.com/NREL/nrel-app-template-bootstrap4

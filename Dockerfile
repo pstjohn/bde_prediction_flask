@@ -7,9 +7,9 @@ RUN conda env update -f environment.yml && \
     rm /tmp/*
  
 
-RUN mkdir -p /deploy/app &&
-    cp -r bde_prediction /deploy/app &&
-    cp etc/run_tests.sh /deploy/app &&
+RUN mkdir -p /deploy/app && \
+    cp -r bde_prediction /deploy/app && \
+    cp etc/run_tests.sh /deploy/app && \
     chmod +x etc/run_tests.sh
 
 WORKDIR /deploy/app

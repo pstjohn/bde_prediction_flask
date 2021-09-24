@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd /deploy/app
-pytest test
+pytest test/

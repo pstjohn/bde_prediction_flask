@@ -1,6 +1,6 @@
 FROM continuumio/miniconda3
 
-COPY bde_prediction/environment.yml /tmp/environment.yml
+COPY etc/environment.yml /tmp/environment.yml
 WORKDIR /tmp
 RUN conda env update -f environment.yml && \ 
     conda clean --all --yes && \

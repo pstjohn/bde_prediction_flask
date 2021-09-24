@@ -15,6 +15,7 @@ dependencies:
 - joblib
 - pytest
 - tensorflow
+- pytest
 - pip
 - pip:
   - alfabet==0.2.0

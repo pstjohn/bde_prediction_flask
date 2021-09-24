@@ -55,7 +55,7 @@ jobs:
       -
         name: Run Tests
         run: |
-          docker run localhost:5000/name/app:latest ./run-tests.sh
+          docker run localhost:5000/name/app:latest ./run_tests.sh
 
   deploy:
     needs: build-and-test

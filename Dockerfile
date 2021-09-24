@@ -5,12 +5,11 @@ WORKDIR /tmp
 RUN conda env update -f environment.yml && \ 
     conda clean --all --yes && \
     rm /tmp/*
- 
 
 RUN mkdir -p /deploy/app && \
     cp -r bde_prediction /deploy/app && \
     cp etc/run_tests.sh /deploy/app && \
-    chmod +x etc/run_tests.sh
+    chmod +x /deploy/app/run_tests.sh
 
 WORKDIR /deploy/app
 ENV PYTHONPATH "${PYTHONPATH}:/deploy/app"

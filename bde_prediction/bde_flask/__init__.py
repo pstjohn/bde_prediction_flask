@@ -1,9 +1,13 @@
-from flask import Flask, render_template, request, flash, jsonify
-from wtforms import Form, StringField, validators
-from werkzeug.middleware.dispatcher import DispatcherMiddleware
-from os import environ
 import urllib.parse
+from os import environ
 
+from alfabet.drawing import draw_mol_outlier
+from alfabet.fragment import canonicalize_smiles
+from alfabet.neighbors import find_neighbor_bonds
+from alfabet.prediction import predict_bdes, check_input
+from flask import Flask, render_template, request, flash, jsonify
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
+from wtforms import Form, StringField, validators
 
 # App config.
 DEBUG = True
@@ -17,32 +21,30 @@ try:
     # Need try->if instead of .get because environment gets garbled by gunicorn and 
     #   rewrites the variable to an empty string, which will return instead of '/'
     if environ['APP_ROOT']:
-        APPLICATION_ROOT='/bde' # Prevent unnecessary backslash from trickling down
+        APPLICATION_ROOT = '/bde'  # Prevent unnecessary backslash from trickling down
     app.config["APPLICATION_ROOT"] = APPLICATION_ROOT
 
     app.config.update(APPLICATION_ROOT=APPLICATION_ROOT)
-        
+
+
     def simple(env, resp):
         resp('200 OK', [('Content-Type', 'text/plain')])
         return [b'HTTP exchange successful, but an internal redirect error occurred.']
-        
-    app.wsgi_app = DispatcherMiddleware(simple, {APPLICATION_ROOT : app.wsgi_app})
-    
+
+
+    app.wsgi_app = DispatcherMiddleware(simple, {APPLICATION_ROOT: app.wsgi_app})
+
 except Exception:
     pass
 
 
-from bde_flask.prediction import predict_bdes, check_input
-from bde_flask.neighbors import find_neighbor_bonds
-from bde_flask.drawing import draw_mol_outlier
-
-from bde_flask.fragment import canonicalize_smiles
-
 class ReusableForm(Form):
     name = StringField('SMILES:', validators=[validators.DataRequired()])
 
+
 def quote(x):
     return urllib.parse.quote(x, safe='')
+
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -76,6 +78,7 @@ def result():
         bde_df['smiles_link'] = bde_df.molecule.apply(quote)
         return render_template(
             "result.html", form=form, smiles=can_smiles, df=bde_df)
+
 
 @app.route("/neighbor", methods=['GET', 'POST'])
 def neighbor():
@@ -111,7 +114,6 @@ def neighbor():
 
 @app.route("/api/<string:smiles>", methods=['GET'])
 def api(smiles):
-
     try:
         can_smiles = canonicalize_smiles(smiles)
         if not can_smiles:
@@ -126,13 +128,12 @@ def api(smiles):
                         'missing bond': missing_bond.tolist()})
 
     bde_df = predict_bdes(can_smiles, draw=False)
-    return jsonify({'status': 'ok', 
+    return jsonify({'status': 'ok',
                     'results': bde_df.to_dict(orient='records')})
 
 
 @app.route("/api/neighbors/<string:smiles>/<int:bond_index>", methods=['GET'])
 def neighbors_api(smiles, bond_index):
-
     try:
         can_smiles = canonicalize_smiles(smiles)
         if not can_smiles:
@@ -149,7 +150,7 @@ def neighbors_api(smiles, bond_index):
     neighbor_df = find_neighbor_bonds(
         can_smiles, bond_index, draw=False).drop(['rid', 'bdfe'], 1)
 
-    return jsonify({'status': 'ok', 
+    return jsonify({'status': 'ok',
                     'results': neighbor_df.to_dict(orient='records')})
 
 

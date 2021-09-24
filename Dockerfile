@@ -1,6 +1,6 @@
 FROM continuumio/miniconda3
 
-COPY bde_prediction/environment.yml /tmp/environment.yml
+COPY etc/environment.yml /tmp/environment.yml
 WORKDIR /tmp
 RUN conda env update -f environment.yml && \ 
     conda clean --all --yes && \
@@ -9,6 +9,7 @@ RUN conda env update -f environment.yml && \
 
 RUN mkdir -p /deploy/app
 COPY bde_prediction /deploy/app
+COPY etc/run_tests.sh /
 
 WORKDIR /deploy/app
 ENV PYTHONPATH "${PYTHONPATH}:/deploy/app"

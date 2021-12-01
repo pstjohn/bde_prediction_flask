@@ -1,6 +1,7 @@
 from api import api, preprocess_smiles
 from fastapi.exceptions import HTTPException
 from fastapi.testclient import TestClient
+import numpy
 import os
 import pandas
 
@@ -41,4 +42,11 @@ def tests_predict():
     desired = pandas.read_json(os.path.join(os.path.dirname(__file__), "CCO.json"))
     data = fastapi_client.get('/predict_bdes/CCO').text
     ret = pandas.read_json(data)
-    assert desired.equals(ret)
+    pandas.testing.assert_frame_equal(desired, ret, check_exact=False)
+
+
+def tests_neighbors():
+    desired = pandas.read_json(os.path.join(os.path.dirname(__file__), "neighbors_CCO_5.json"))
+    data = fastapi_client.get('/neighbors/CCO/5').text
+    ret = pandas.read_json(data)
+    pandas.testing.assert_frame_equal(desired, ret, check_exact=False)

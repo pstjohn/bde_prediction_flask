@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from alfabet.fragment import canonicalize_smiles
+from alfabet.neighbors import find_neighbor_bonds
 from alfabet.prediction import predict_bdes, check_input
 
 
@@ -37,3 +38,12 @@ def get_predict_bdes(smiles: str):
     can_smiles = preprocess_smiles(smiles)
     bde_df = predict_bdes(can_smiles, draw=False)
     return bde_df.to_dict(orient='records')
+
+
+# Get bond_index neighbor from smiles string
+@api.get("/neighbors/{smiles}/{bond_index}")
+def get_neighbors(smiles: str, bond_index: int):
+    can_smiles = preprocess_smiles(smiles)
+    neighbor_df = find_neighbor_bonds(
+        can_smiles, bond_index, draw=False).drop(['rid', 'bdfe'], 1)
+    return neighbor_df.to_dict(orient='records')

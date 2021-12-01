@@ -1,8 +1,8 @@
-FROM continuumio/miniconda3
+FROM condaforge/mambaforge
 
 COPY etc/environment.yml /tmp/environment.yml
 WORKDIR /tmp
-RUN conda env update -f environment.yml && \ 
+RUN mamba env update -f environment.yml && \
     conda clean --all --yes && \
     rm /tmp/*
 

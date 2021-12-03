@@ -5,17 +5,16 @@ from alfabet.drawing import draw_mol_outlier
 from alfabet.fragment import canonicalize_smiles
 from alfabet.neighbors import find_neighbor_bonds
 from alfabet.prediction import predict_bdes, check_input
-from flask import Flask, render_template, request, flash, jsonify
+from flask import Flask, render_template, request, flash, jsonify, send_from_directory
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from wtforms import Form, StringField, validators
 
 # App config.
-DEBUG = True
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
-app.config['DEBUG'] = True
+app.config['DEBUG'] = False
 
 try:
     # Need try->if instead of .get because environment gets garbled by gunicorn and 
@@ -46,6 +45,16 @@ def quote(x):
     return urllib.parse.quote(x, safe='')
 
 
+@app.route('/client/<path:path>')
+def send_client(path):
+    return send_from_directory('static/client', path)
+
+
+@app.route('/static/<path:path>')
+def send_static(path):
+    return send_from_directory('static', path)
+
+
 @app.route("/", methods=['GET', 'POST'])
 def index():
     form = ReusableForm(request.form)
@@ -74,7 +83,8 @@ def result():
 
     else:
 
-        bde_df = predict_bdes(can_smiles)
+        bde_df = predict_bdes(can_smiles, draw=True)
+        bde_df = bde_df.drop_duplicates(['fragment1', 'fragment2']).reset_index(drop=True)
         bde_df['smiles_link'] = bde_df.molecule.apply(quote)
         return render_template(
             "result.html", form=form, smiles=can_smiles, df=bde_df)
@@ -103,10 +113,10 @@ def neighbor():
 
     else:
 
-        bde_df = predict_bdes(can_smiles)
+        bde_df = predict_bdes(can_smiles, draw=True)
         bde_row = bde_df.set_index('bond_index').loc[bond_index]
 
-        neighbor_df = find_neighbor_bonds(can_smiles, bond_index)
+        neighbor_df = find_neighbor_bonds(can_smiles, bond_index, draw=True)
         return render_template(
             "neighbor.html", form=form, smiles=can_smiles, bde_row=bde_row,
             neighbor_df=neighbor_df)

@@ -14,8 +14,8 @@ dependencies:
 - wtforms
 - joblib
 - pytest
-- tensorflow>=2.6
 - pytest
 - pip
 - pip:
+  - tensorflow==2.7.1
   - alfabet==0.2.2

@@ -62,7 +62,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          image: app:latest
+          image: localhost:5000/name/app:latest
 
   deploy:
     needs: build-and-test

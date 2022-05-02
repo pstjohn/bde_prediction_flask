@@ -56,6 +56,19 @@ jobs:
         name: Run Tests
         run: |
           docker run localhost:5000/name/app:latest ./run_tests.sh
+      -
+        name: Run Snyk to check Docker image for vulnerabilities
+        uses: snyk/actions/docker@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          image: localhost:5000/name/app:latest
+          args: --severity-threshold=high --file=Dockerfile
+      - 
+        name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: snyk.sarif
 
   deploy:
     needs: build-and-test

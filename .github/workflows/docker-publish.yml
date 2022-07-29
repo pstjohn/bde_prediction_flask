@@ -131,7 +131,7 @@ jobs:
         name: Build, tag, and push image to Amazon ECR
         env:
           REGISTRY: 991404956194.dkr.ecr.us-west-2.amazonaws.com
-          REPOSITORY: ysi_prediction_flask
+          REPOSITORY: bde_prediction_flask
           IMAGE_TAG: ${{ steps.tag.outputs.tag }}
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .

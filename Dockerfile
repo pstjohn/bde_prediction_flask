@@ -6,10 +6,7 @@ WORKDIR /tmp
 RUN mamba env update -f environment.yml && \
     conda clean --all --yes && \
     rm /tmp/*
-
-# Force no caching of these layers
-ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
-
+    
 RUN mkdir -p /deploy/app
 COPY bde_prediction /deploy/app
 COPY etc/run_tests.sh /deploy/app

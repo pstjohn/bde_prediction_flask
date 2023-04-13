@@ -12,6 +12,7 @@ dependencies:
 - nomkl
 - numpy
 - wtforms
+- httpx
 - joblib
 - pytest
 - pip

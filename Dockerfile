@@ -1,9 +1,7 @@
 FROM continuumio/miniconda3
-
-RUN conda install -c conda-forge mamba
 COPY etc/environment.yml /tmp/environment.yml
 WORKDIR /tmp
-RUN mamba env update -f environment.yml && \
+RUN conda env update -f environment.yml && \
     conda clean --all --yes && \
     rm /tmp/*
     
